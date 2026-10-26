@@ -36,27 +36,23 @@ export default function Page() {
       <section>
         <h2>Refresh and failure behavior</h2>
         <p>
-          Successful complete snapshots are reused for one hour. This is an
-          application caching choice, not a claim about either source’s
-          publishing schedule. Visible pages check hourly and when returning to
-          a tab after an hour; Refresh listings can retry sooner, but it may
-          return the same cached snapshot. Simultaneous requests in one server
-          instance share a fetch. The platform cache is best effort, so separate
-          server instances may occasionally fetch independently.
+          GitHub Actions attempts to refresh the official directory hourly, on
+          each code push, and when manually triggered. Scheduled runs can be
+          delayed by GitHub. The page loads the latest successfully published
+          JSON snapshot and shows its original import date. Refresh listings
+          reloads that published file; it does not start a new government import.
         </p>
         <p>
-          Each source fetch checks all source record IDs and rejects incomplete
-          pages. A failure retains the last complete snapshot with a stale
-          notice for up to seven days on the server or a new browser visit. An
-          already open page retains its last successful data, labeled with its
-          original date, until you leave. Saved resources remain until you
-          remove them and can be older. A cache is not a guarantee of offline
-          operation.
+          Each source fetch checks source record IDs and rejects incomplete
+          pages. If the import fails, the last sourced snapshot is retained.
+          Snapshots older than two hours are marked stale. An already open page
+          checks again hourly and when returning after an hour. Saved resources
+          can be older and should be confirmed with the provider.
         </p>
         <p>
-          No stock feed or scheduled background inventory job is connected. No
-          request runs on a schedule while everyone has the app closed. Provider
-          confirmations are not created by refreshing the directory.
+          No stock feed is connected. The scheduled job updates directory
+          listings, not food inventory. Refreshing never establishes provider
+          confirmation, hours, eligibility, or stock.
         </p>
       </section>
       <section>
