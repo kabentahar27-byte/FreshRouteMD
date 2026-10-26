@@ -1,0 +1,6 @@
+export type Category = 'Food Pantry'|'Community Meal / Soup Kitchen'|'SNAP-Authorized Retailer'|'Grocery Store'|'Farmers Market'|'WIC Resource'|'Food Distribution'|'Youth/Summer Meals'|'Senior Food Assistance'|'Emergency Food Assistance'|'Other Food Resource';
+export type Provenance={source_name:string;source_url:string;source_record_id:string|null;source_type:string;date_imported:string;date_last_verified:string|null;verification_scope:string|null;source_updated_at:string|null;resource_type:Category;license_url?:string};
+export type Resource={id:string;name:string;category:Category;resource_types:Category[];services:string[];description:string;address:string|null;city:string;zip:string;coordinates:[number,number]|null;coordinateQuality:string|null;hours:string|null;eligibility:string|null;cost:string|null;phone:string|null;notes:string;serviceMode:'in-person'|'online';provenance:Provenance[];conflicts:{field:string;alternate:string;source_name:string}[]};
+export {categories,milesBetween,directionsUrl,quality} from './data-utils.mjs';
+export {places} from './places';
+export function displayDate(date:string|null|undefined){return date?new Intl.DateTimeFormat('en-US',{year:'numeric',month:'short',day:'numeric',timeZone:'UTC'}).format(new Date(date)):'Not verified';}

@@ -1,0 +1,4 @@
+'use client';
+import {Children,cloneElement,isValidElement,type ReactNode} from 'react';
+import Header from './header';import Footer from './footer';import {useLanguage} from './language-context';
+export default function InfoPage({title,lead,children,active=''}:{title:string;lead:string;children:ReactNode;active?:string}){const {t,language}=useLanguage();function translate(node:ReactNode):ReactNode{return Children.map(node,child=>{if(typeof child==='string')return t(child);if(isValidElement<{children?:ReactNode}>(child)&&child.props.children)return cloneElement(child,{},translate(child.props.children));return child})}return <><Header active={active}/><main id="main" className="legal-page"><h1>{t(title)}</h1><p className="lead">{t(lead)}</p>{language==='es'&&active!=='learn'&&<p className="supporting">La documentación detallada del proyecto se conserva en su idioma original.</p>}{translate(children)}</main><Footer/></>}

@@ -1,0 +1,14 @@
+'use client';
+import {useEffect,useRef,useState} from 'react';
+import {useLanguage} from './language-context';
+import type {Map,LayerGroup} from 'leaflet';
+import type {Resource} from '@/lib/resources';
+import 'leaflet/dist/leaflet.css';
+export default function ResourceMap({resources,origin,onSelect}:{resources:Resource[];origin:[number,number];onSelect:(r:Resource)=>void}){
+ const {t}=useLanguage();
+ const host=useRef<HTMLDivElement>(null),map=useRef<Map|null>(null),layers=useRef<LayerGroup|null>(null),[ready,setReady]=useState(false),[failed,setFailed]=useState(false);
+ useEffect(()=>{let cancelled=false;import('leaflet').then(L=>{if(cancelled||!host.current)return;map.current=L.map(host.current,{scrollWheelZoom:false}).setView([39.37,-76.73],11);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>',maxZoom:16,referrerPolicy:'strict-origin-when-cross-origin'}).on('tileerror',()=>setFailed(true)).addTo(map.current);layers.current=L.layerGroup().addTo(map.current);setReady(true)}).catch(()=>setFailed(true));return()=>{cancelled=true;map.current?.remove();map.current=null}},[]);
+ useEffect(()=>{if(!ready)return;let cancelled=false;import('leaflet').then(L=>{if(cancelled||!map.current||!layers.current)return;layers.current.clearLayers();const points:[number,number][]=[];resources.filter(r=>r.coordinates).forEach(r=>{points.push(r.coordinates!);const retailer=r.resource_types.includes('SNAP-Authorized Retailer');const el=document.createElement('span');el.className=`map-pin ${retailer?'retail-pin':''}`;el.textContent=retailer?'R':'F';const marker=L.marker(r.coordinates!,{title:`View ${r.name}`,alt:`View ${r.name}`,icon:L.divIcon({html:el,className:'fresh-marker',iconSize:[34,40],iconAnchor:[17,40]})});const tip=document.createElement('span');tip.textContent=r.name+' · '+r.category;marker.bindTooltip(tip).on('click',()=>onSelect(r)).addTo(layers.current!)});if(points.length)map.current.fitBounds(L.latLngBounds(points),{padding:[45,45],maxZoom:13});else map.current.setView(origin,11);map.current.invalidateSize()});return()=>{cancelled=true}},[resources,origin,ready,onSelect]);
+ useEffect(()=>{if(!host.current)return;const observer=new ResizeObserver(()=>map.current?.invalidateSize());observer.observe(host.current);return()=>observer.disconnect()},[]);
+ return <><div className="live-map" ref={host} aria-label={t("Interactive map of resources on the current results page")}/>{!ready&&!failed&&<div className="map-loading" role="status">{t("Loading the neighborhood map…")}</div>}{failed&&<div className="map-error" role="status">{t("Map background unavailable. Use the resource list and address-based directions.")}</div>}</>;
+}

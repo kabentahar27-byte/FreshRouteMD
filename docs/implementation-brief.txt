@@ -1,0 +1,391 @@
+Improve the existing FreshRoute MD application into a cohesive, reliable Congressional App Challenge submission. Work on the existing application and repository. Preserve the forest-themed UI, existing routes, legitimate data, saved preferences, privacy protections, and working integrations.
+
+This is an implementation task, not merely an assessment or plan. Inspect the application, implement improvements, run appropriate checks, and prepare a reviewable preview. Do not publish until I approve the completed preview.
+
+Do not declare success unless the implemented behavior and verification evidence support it. If something cannot be completed, identify the specific blocker and the remaining work honestly.
+
+1. INSPECT THE CURRENT APPLICATION
+
+Before editing:
+- Inspect the current source, framework, routes, components, styling, data models, API requests, storage, authentication, access configuration, and tests.
+- Identify which features actually work, which are placeholders, which controls do not affect outcomes, and which destinations duplicate another page.
+- Check for changes made since previous work before overwriting anything.
+- Establish a baseline by running relevant existing checks.
+- Distinguish current tests from obsolete tests that depend on removed demo data. Do not restore fabricated data just to make an obsolete test pass.
+- Reuse existing conventions and functioning logic where practical.
+
+Make a requirements checklist covering every section below. Track each requirement as implemented and verified, implemented but unverified, blocked, or intentionally deferred with a reason.
+
+2. COMPLETE THE CORE WORKFLOW
+
+The main experience must connect:
+User-owned ingredients → equipment-compatible meal → missing ingredients → grocery spending plan.
+
+Food-resource discovery should support this workflow without pretending that a resource has particular ingredients available.
+
+A user must be able to:
+- Enter or select ingredients they actually have.
+- Select their cooking equipment.
+- Set relevant dietary preferences and allergies.
+- See compatible recipe suggestions.
+- Understand which ingredients they have and which they still need.
+- Choose a recipe and adjust servings when supported by reliable recipe quantities.
+- Transfer missing ingredients to a grocery list.
+- Enter their own grocery prices and quantities.
+- See the grocery total and remaining budget or amount over budget.
+- Find potentially useful food resources separately.
+- Save or print a clear plan and a resource visit checklist.
+
+Do not require a provider inventory feed for recipes based on ingredients entered by the user.
+
+Clearly distinguish:
+- Ingredients entered by the user.
+- Ingredients required by a recipe.
+- Ingredients on a shopping list.
+- Availability reported by a provider, if a genuine feed exists.
+- Unknown availability.
+
+Never automatically mark a missing ingredient as acquired because a resource was selected or a directions link was opened.
+
+3. IMPLEMENT A TRUSTWORTHY RECIPE SYSTEM
+
+Inspect the existing recipe collection and logic before reusing them. Do not automatically reactivate incomplete demo recipes.
+
+Use a small, carefully reviewed recipe collection rather than a large unreliable one.
+
+Each published recipe must have:
+- A name and short description.
+- Defined ingredients with usable quantities and units.
+- A stated base serving count.
+- Required equipment.
+- Complete, coherent preparation steps.
+- Preparation time labeled appropriately as an estimate.
+- Applicable dietary and known allergen information.
+- Honest attribution or provenance when using third-party recipe material.
+
+Do not copy copyrighted recipe instructions without appropriate permission. Use original instructions or appropriately licensed material and preserve required attribution.
+
+Equipment logic must:
+- Require all equipment needed for one supported preparation method.
+- Support alternative methods only when each has valid equipment requirements and corresponding instructions.
+- Exclude or clearly separate recipes that cannot be prepared with the selected equipment.
+- Never count one matching tool as satisfying an entire equipment requirement.
+- Respect storage and refrigeration requirements where relevant.
+
+Ingredient logic must:
+- Normalize common ingredient names without making unsafe substitutions.
+- Distinguish available ingredients from missing ingredients.
+- Avoid claiming quantity sufficiency when the user has not entered quantities.
+- Scale quantities correctly when servings change.
+- Avoid silently converting incompatible units.
+- Use deterministic, explainable matching and ranking.
+
+Allergy logic must:
+- Exclude recipes containing a known conflicting ingredient when that allergy is selected.
+- Treat unknown ingredient or product information as unknown.
+- Avoid claiming a recipe is allergy-safe.
+- Explain that brands, substitutions, labels, and cross-contact require user verification.
+- Avoid medical or nutrition claims that the app cannot support.
+
+Do not publish unsafe or ambiguous cooking instructions. If recipe safety or completeness cannot be established, keep that recipe out of suggestions and report the issue.
+
+4. CONNECT THE SPENDING PLAN
+
+Preserve and improve the current manual budget calculator.
+
+Requirements:
+- Transfer missing recipe ingredients into the grocery list through an explicit user action.
+- Preserve ingredient names, units, and required quantities.
+- Let users edit, remove, combine, and mark items acquired.
+- Prevent accidental duplicate entries when transferring the same recipe repeatedly.
+- Do not merge incompatible units or distinct products.
+- Distinguish recipe quantities from purchasable package quantities.
+- Do not silently equate one recipe unit with one grocery package.
+- Allow manual prices when no verified price source exists.
+- Clearly identify any genuinely supported estimate.
+- Never fabricate store prices, savings, promotions, or pantry stock.
+- Label totals as incomplete when required prices are missing.
+- Do not treat a blank price as a confirmed zero-dollar item.
+- Include only explicitly priced grocery quantities in the priced subtotal.
+- Explain excluded costs such as taxes, transportation, and fees.
+- Use precise currency calculations.
+- Validate negative, blank, nonfinite, excessively large, and otherwise invalid values.
+- Support realistic quantities and units, including fractional quantities where appropriate.
+- Show “Remaining” or “Over budget” using text as well as color.
+- Preserve the active plan during language switching, route changes, refreshes, and browser back navigation where technically appropriate.
+
+Persist user-entered plans locally unless the existing application has a supported, authorized account-based storage system. Explain what is stored and provide an explicit way to clear it.
+
+Do not overwrite existing saved data during migration.
+
+5. MAKE FOOD DISCOVERY USEFUL AND HONEST
+
+Preserve the official sourced directory and existing legitimate data integrations.
+
+Clearly distinguish food assistance from grocery retailers:
+- SNAP-authorized retailers sell groceries; SNAP acceptance does not mean free food, low prices, WIC acceptance, or particular stock.
+- Food-pantry classification does not by itself confirm free service, eligibility, hours, or availability.
+- Unknown values must remain visibly unknown.
+
+Resource details should make these facts discoverable:
+- Resource name and type.
+- Address and approximate distance, when supported.
+- Published hours and their limitations.
+- Eligibility and visit requirements.
+- Cost information, when supplied.
+- Contact options.
+- Original sources and relevant dates.
+- Accessibility or transportation information only when supported.
+- Source conflicts and missing information.
+
+Add a useful visit checklist containing relevant unanswered questions, such as:
+- Are you operating on the intended visit date?
+- Do you serve my area or household?
+- Is an appointment or identification required?
+- Are there dietary accommodations?
+- What should I bring?
+- Is the location accessible?
+
+Do not imply that the checklist answers have been confirmed.
+
+Allow users to save a resource or include it in their plan without claiming that groceries were obtained.
+
+6. REMOVE OR FIX MISLEADING CONTROLS
+
+Audit every visible control.
+
+Each control must either:
+- Produce an implemented, useful effect; or
+- Be removed from the primary workflow or explicitly identified as unavailable.
+
+Transportation:
+- Do not present transportation selection as a working route filter unless it genuinely changes results using supported information.
+- Straight-line distance must not be presented as walking, driving, cycling, or transit distance.
+- Do not invent travel times or transit accessibility.
+- If useful routing cannot be implemented with available supported services, retain approximate-distance search and external directions, and move transportation preferences out of the main search controls.
+- Preserve any existing saved transportation preference without implying unsupported behavior.
+
+Personalization:
+- Apply dietary preferences, allergies, equipment, and ingredient selections to recipes where supported.
+- Apply preferences to resource results only when actual source fields support doing so.
+- Do not infer dietary accommodations from a resource’s name or category.
+- Remove unsupported match scores.
+- Prefer concise explanations of the actual factors used.
+
+Navigation:
+- Keep Find food, Choose a meal, and Plan your spending as the primary tasks.
+- Ensure each destination performs its advertised task.
+- Audit Community, Learn, About, Profile, the sourced directory, and provider-related destinations.
+- Give duplicate destinations a distinct useful purpose or consolidate their navigation while preserving useful direct links.
+- Do not keep a separate destination that merely disguises the finder as another completed feature.
+- Preserve browser back behavior and direct links.
+
+7. FIX DATA REFRESH AND FAILURE BEHAVIOR
+
+Inspect the current periodic refresh implementation.
+
+Required behavior:
+- Background refresh must not close an open resource detail panel.
+- Preserve the selected resource by stable identity when possible.
+- If a selected resource changes or disappears, explain what happened without abruptly discarding the user’s context.
+- A transient source failure must not erase the last successful results.
+- Keep the last successful retrieval available with a clear timestamp and stale-data notice.
+- Distinguish failed loading from a legitimate empty result.
+- Provide Retry.
+- Avoid overlapping requests and prevent older responses from overwriting newer state.
+- Clean up timers and requests when appropriate.
+- Avoid unnecessary complete dataset downloads every minute.
+- Choose a refresh and caching strategy appropriate to the actual sources, their update frequency, and their documented limits.
+
+Clearly distinguish:
+- Time the app last fetched the source.
+- Time the source reports being updated.
+- Time a provider last confirmed information.
+- Inventory confirmation, which remains unknown without genuine inventory data.
+
+A successful API request is not verification that an organization is operating today.
+
+Do not implement scheduled stock updates unless a real, authorized provider data path exists. Automatic timestamps or repeated directory requests must never masquerade as stock tracking.
+
+8. PRESERVE AND REFINE THE FOREST UI
+
+Retain the existing minimalist forest visual direction and working color personalization.
+
+Preserve:
+- Readable serif headings and clean body typography.
+- Clear task navigation.
+- Generous spacing and scannable result rows.
+- Optional maps.
+- Shared design tokens.
+- Pine, Moss, Dusk, custom accent, and restore-default options.
+- Immediate theme updates and local persistence.
+- Readable text and controls with very light or dark custom colors.
+
+Improve styling consistently across new and existing working screens.
+
+Do not prioritize additional decorative features over completing the workflow.
+
+9. ACCESSIBILITY, RESPONSIVENESS, AND LANGUAGE
+
+Use:
+- Semantic structure and logical headings.
+- Visible labels.
+- Understandable validation and error messages.
+- Strong contrast and visible keyboard focus.
+- Approximately 44px touch targets.
+- Accessible dialogs with keyboard operation, Escape to close, appropriate focus containment, and focus return.
+- Reduced-motion support.
+- Anchor and focus positioning that is not hidden by sticky navigation.
+
+Check desktop, tablet, and narrow mobile layouts, including long names and Spanish text.
+
+English and Spanish must cover the implemented workflow:
+- Navigation.
+- Forms and labels.
+- Recipe interface and recipe content.
+- Matching explanations.
+- Validation.
+- Budget output.
+- Loading, empty, stale, and error states.
+- Saved-plan controls.
+- Notices and dynamic messages.
+
+Preserve the current task and user inputs when switching languages.
+
+Source records may remain in their original language, but clearly identify that fact. Do not silently mistranslate eligibility requirements.
+
+10. PRIVACY AND DATA INTEGRITY
+
+Preserve existing privacy protections.
+
+- Do not collect personal information that the workflow does not need.
+- Do not add authentication merely for presentation.
+- Keep precise location optional.
+- Preserve existing consent boundaries for maps and address lookup.
+- Do not introduce undisclosed third-party transmission.
+- Explain local storage accurately.
+- Provide clear controls to remove locally stored preferences and plans.
+- Do not expose secrets in source, logs, screenshots, exports, or documentation.
+- Do not change sharing or access permissions without my explicit authorization.
+- Do not overwrite legitimate source data with mock data for convenience.
+
+11. VERIFY REAL USER USEFULNESS
+
+Prepare a short usability-testing guide for three to five testers.
+
+Use one consistent task:
+“Using the ingredients, equipment, and budget in this scenario, choose a meal, identify missing groceries, calculate spending, and find a potentially useful food resource.”
+
+The guide should capture:
+- Whether the task was completed.
+- Where the tester hesitated.
+- What they misunderstood.
+- Any incorrect assumption caused by the interface.
+- What should change.
+
+Use hypothetical scenarios rather than asking testers to disclose hardship, health information, allergies, or financial circumstances.
+
+Do not claim that testing occurred unless it actually did.
+Do not invent testers, interviews, feedback, testimonials, partnerships, or impact statistics.
+
+Implement improvements based on actual feedback if it is provided.
+
+12. STUDENT OWNERSHIP AND COMPETITION PREPARATION
+
+Before offering contest-specific guidance, verify current requirements using official Congressional App Challenge sources. Distinguish general rules from district-specific instructions and flag any conflicting deadlines.
+
+Do not claim that eligibility or a win is guaranteed.
+
+Audit the app and documentation for:
+- Student-contribution placeholders.
+- Unsupported claims about who wrote code.
+- Incomplete AI disclosures.
+- Unfinished operator or contact fields.
+- Misleading descriptions of implemented features.
+
+Preserve truthful AI attribution. Do not conceal AI assistance or invent student contributions.
+
+Prepare:
+- An accurate technical architecture summary.
+- A list of AI-assisted work.
+- A contribution-log template.
+- A short explanation of the main algorithms and their limitations.
+- A list of meaningful technical tasks the student team could personally implement and explain.
+
+Do not complete student-owned tasks on the team’s behalf and then describe them as student-authored. Clearly separate work you implemented from work the students actually complete. Ask for factual student-contribution details only when needed to finalize those claims.
+
+Documentation and studying generated code must not be presented as substitutes for genuine technical contributions.
+
+13. JUDGE ACCESS AND DEMONSTRATION
+
+Inspect the current access configuration without changing it.
+
+- Identify whether a judge could open the submitted app link.
+- If access is restricted, explain the available supported options.
+- Do not publish publicly, invite people, or widen permissions without explicit authorization.
+- Prepare instructions for testing the approved access method from another account or signed-out browser.
+
+Prepare a demonstration outline within the current official time limit:
+- Briefly explain the user and problem.
+- Demonstrate one complete working workflow.
+- Show one or two meaningful technical decisions.
+- Explain a limitation honestly.
+- Accurately identify student and AI contributions.
+
+Do not claim future features are working.
+Do not conceal dependency failures through fabricated results.
+
+14. TESTING AND ACCEPTANCE
+
+Run meaningful automated tests for:
+- Ingredient normalization and matching.
+- Equipment requirements and alternative preparation methods.
+- Known allergen conflicts and unknown information.
+- Recipe serving and quantity scaling.
+- Missing-ingredient transfer and duplicate prevention.
+- Grocery package and recipe quantity distinctions.
+- Currency precision, incomplete totals, invalid inputs, and over-budget results.
+- Persistence and existing-data migration.
+- Resource filtering and preservation of source provenance.
+- Refresh success, failure, stale state, request ordering, and selected-detail preservation.
+
+Perform browser checks, when supported, for:
+- Desktop, tablet, and narrow mobile layouts.
+- Primary and secondary navigation.
+- Direct links and browser back.
+- Keyboard-only use and dialog focus.
+- English and Spanish.
+- Source loading, empty, error, and stale states.
+- Ingredients-to-recipe-to-budget transitions.
+- Equipment-dependent suggestions.
+- Theme persistence and custom-color contrast.
+- Reduced-motion behavior.
+- Printing or exporting a plan.
+- Approved judge access.
+
+Do not mark a browser check passed because a build or unit test passed.
+
+If browser infrastructure is unavailable:
+- Preserve the implementation.
+- Report the precise verification limitation.
+- Provide the best supported preview.
+- Do not describe an offline layout preview as a functioning interactive app.
+- Do not deploy merely to bypass the requirement for review.
+
+15. FINAL HANDOFF
+
+Prepare a preview for my review before publishing.
+
+Provide a concise final report containing:
+- What changed.
+- The complete workflow that now works.
+- Tests and browser checks actually completed.
+- Requirements still blocked or unverified.
+- Remaining source-data limitations.
+- Any student-authorship information still needed.
+- Current judge-access status.
+- The preview link or supported review artifact.
+
+Keep the detailed requirements checklist available in the project documentation.
+
+Do not stop after delivering a plan, superficial UI changes, or placeholder screens. Complete the authorized implementation as far as the environment and genuine available data permit. Do not fabricate completion, and do not publish until I approve the preview.
